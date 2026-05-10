@@ -228,7 +228,7 @@
 ### 撰写技术报告
 
 报告可由中文或英文撰写。  
-报告统一使用CCL 2024的论文模板。论文模板下载链接：http://cips-cl.org/static/CCL2024/downloads/ccl2023_template.zip。  
+报告统一使用CCL 2024的论文模板。论文模板下载链接：http://cips-cl.org/static/CCL2024/downloads/ccl2023_template.zip 。  
 报告正文不得超过6页，参考文献页数不限。  
 报告应至少包含以下四个部分：模型介绍、评测结果、结果分析与讨论和参考文献。  
 
