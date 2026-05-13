@@ -261,7 +261,7 @@
 
 ## 7. Baseline 系统
 
-本评测将提供可复现的 baseline 系统。  
+本评测将提供可复现的 baseline 系统。  （代码在github目录上）
 
 ### 通用 Baseline
 
