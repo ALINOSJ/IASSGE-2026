@@ -263,13 +263,11 @@
 
 本评测将提供可复现的 baseline 系统。  
 
-### 通用 Baseline (对应PC赛道)
+### 通用 Baseline
 
--	Track 1：基于 FunASR 开源中文语音识别工具链构建 。
+-	Track 1：基于 FunASR 开源中文语音识别工具链构建。 
 
--	Track 2：结合规则后处理与大模型的关键词增强机制 。  
-
-### 轻量化 Baseline (对应手机赛道)
+### 轻量化 Baseline
 
 -	提供一套基于轻量化网络架构的端侧方案。
 
