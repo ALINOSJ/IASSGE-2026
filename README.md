@@ -265,7 +265,9 @@
 
 ### 通用 Baseline
 
--	Track 1：基于 FunASR 开源中文语音识别工具链构建。 
+-	Track 1：基于 FunASR 开源中文语音识别工具链构建。
+
+-	Track 2：结合规则后处理与大模型的关键词增强机制。
 
 ### 轻量化 Baseline
 
