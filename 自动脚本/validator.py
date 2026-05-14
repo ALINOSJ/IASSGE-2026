@@ -39,7 +39,7 @@ def validate_submission(file_path):
         elif start_ms >= end_ms:
             errors.append(f"第 {i+1} 条数据的开始时间 ({start_ms}) 大于等于结束时间 ({end_ms})")
 
-        # 🌟 终极修复 2：跨句时间轴顺序与重叠检查
+        # 跨句时间轴顺序与重叠检查
         if i > 0:
             if start_ms < prev_start_ms:
                 errors.append(f"第 {i+1} 条数据的开始时间 ({start_ms}) 早于上一条的开始时间 ({prev_start_ms})，时间轴乱序！")
