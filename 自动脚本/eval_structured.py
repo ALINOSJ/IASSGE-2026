@@ -141,6 +141,29 @@ def evaluate(pred_path, gt_path):
 
     # 2. 时间轴偏差
     avg_start_diff, avg_end_diff = evaluate_time(preds, gts)
+    time_penalty = min((avg_start_diff + avg_end_diff) / 2000, 1.0)
+
+
+
+    # # 3. 计算 Keyword 召回率和 F1-Score (使用 Counter 解决多个相同关键词的问题)
+    # gt_cnt = Counter(gt_keys)
+    # pred_cnt = Counter(pred_keys)
+    
+    # tp = sum(min(pred_cnt[k], gt_cnt[k]) for k in gt_cnt)
+    # total_pred = sum(pred_cnt.values())
+    # total_gt = sum(gt_cnt.values())
+    
+    # precision = tp / total_pred if total_pred > 0 else 0.0
+    # recall = tp / total_gt if total_gt > 0 else 0.0
+    # f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+
+    # print(f"关键词精确率 (Precision): {precision:.2%}")
+    # print(f"关键词召回率 (Recall): {recall:.2%}")
+    # print(f"关键词 F1 分数: {f1_score:.4f}")
+    
+    # Track2 综合得分公式
+    final_score = (1 - cer) * 0.8 + speaker_acc * 0.1 + (1 - time_penalty) * 0.1
+    final_score = max(final_score, 0.0)
 
     print("="*50)
     print("[CCL26-Eval 自动评分报告 - 结构化字幕赛道 (TRACK 2)]")
@@ -148,29 +171,9 @@ def evaluate(pred_path, gt_path):
     print(f"字错误率 (CER): {cer:.2%}")
     print(f"时间轴平均偏差: 起始点 {avg_start_diff:.2f}ms, 结束点 {avg_end_diff:.2f}ms")
     print(f"说话人准确率 (Speaker Acc): {speaker_acc:.2%} ")
-
-    # 3. 计算 Keyword 召回率和 F1-Score (使用 Counter 解决多个相同关键词的问题)
-    gt_cnt = Counter(gt_keys)
-    pred_cnt = Counter(pred_keys)
-    
-    tp = sum(min(pred_cnt[k], gt_cnt[k]) for k in gt_cnt)
-    total_pred = sum(pred_cnt.values())
-    total_gt = sum(gt_cnt.values())
-    
-    precision = tp / total_pred if total_pred > 0 else 0.0
-    recall = tp / total_gt if total_gt > 0 else 0.0
-    f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
-    print(f"关键词精确率 (Precision): {precision:.2%}")
-    print(f"关键词召回率 (Recall): {recall:.2%}")
-    print(f"关键词 F1 分数: {f1_score:.4f}")
-    # Track2 综合得分公式
-    time_penalty = min((avg_start_diff + avg_end_diff) / 2000, 1.0)
-    
-    final_score = (1 - cer) * 0.3 + f1_score * 0.3 + speaker_acc * 0.2 + (1 - time_penalty) * 0.2
-    final_score = max(final_score, 0.0)
     print(f"综合得分: {final_score:.4f}")
     print("="*50)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CCL26-Eval 结构化字幕评测脚本 (Track 2)")
