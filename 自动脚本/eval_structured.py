@@ -135,7 +135,7 @@ def evaluate(pred_path, gt_path):
         gt_keys.extend(gk)
         gt_speaker_labels.extend(sl)
 
-    # 1. 计算 CER 与 说话人准确率 (Speaker Accuracy)
+    # 1. 计算 CER 与 说话人准确率
     distance, speaker_acc, speaker_mapping = get_alignment_and_speaker_accuracy(pred_full_text, gt_full_text, pred_speaker_labels, gt_speaker_labels)
     cer = distance / len(gt_full_text) if len(gt_full_text) > 0 else 1.0
 
@@ -143,26 +143,20 @@ def evaluate(pred_path, gt_path):
     avg_start_diff, avg_end_diff = evaluate_time(preds, gts)
     time_penalty = min((avg_start_diff + avg_end_diff) / 2000, 1.0)
 
-
-
-    # # 3. 计算 Keyword 召回率和 F1-Score (使用 Counter 解决多个相同关键词的问题)
-    # gt_cnt = Counter(gt_keys)
-    # pred_cnt = Counter(pred_keys)
-    
-    # tp = sum(min(pred_cnt[k], gt_cnt[k]) for k in gt_cnt)
-    # total_pred = sum(pred_cnt.values())
-    # total_gt = sum(gt_cnt.values())
-    
-    # precision = tp / total_pred if total_pred > 0 else 0.0
-    # recall = tp / total_gt if total_gt > 0 else 0.0
-    # f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
-    # print(f"关键词精确率 (Precision): {precision:.2%}")
-    # print(f"关键词召回率 (Recall): {recall:.2%}")
-    # print(f"关键词 F1 分数: {f1_score:.4f}")
+    # 3. 计算 Keyword 召回率
+    gt_cnt = Counter(gt_keys)
+    tp = 0
+    for k, gt_count in gt_cnt.items():
+        # 在选手的纯文本输出中统计关键词出现次数
+        pred_count = pred_full_text.count(k)
+        # 取最小值截断，防止复读机刷分
+        tp += min(pred_count, gt_count)
+        
+    total_gt = sum(gt_cnt.values())
+    recall = tp / total_gt if total_gt > 0 else 0.0
     
     # Track2 综合得分公式
-    final_score = (1 - cer) * 0.8 + speaker_acc * 0.1 + (1 - time_penalty) * 0.1
+    final_score = (1 - cer) * 0.45 + recall * 0.35 + speaker_acc * 0.1 + (1 - time_penalty) * 0.1
     final_score = max(final_score, 0.0)
 
     print("="*50)
@@ -171,6 +165,7 @@ def evaluate(pred_path, gt_path):
     print(f"字错误率 (CER): {cer:.2%}")
     print(f"时间轴平均偏差: 起始点 {avg_start_diff:.2f}ms, 结束点 {avg_end_diff:.2f}ms")
     print(f"说话人准确率 (Speaker Acc): {speaker_acc:.2%} ")
+    print(f"关键词召回率 (Recall): {recall:.2%}")
     print(f"综合得分: {final_score:.4f}")
     print("="*50)
 
