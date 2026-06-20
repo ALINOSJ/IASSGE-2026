@@ -67,7 +67,7 @@ def validate_submission(file_path):
             errors.append(f"第 {i+1} 条数据的 <key> 标签数量不匹配（未正确闭合）")
             
         # 检查 <key> 内部是否违规包含标点符号
-        if re.search(r'<key>[^<]*[，。！？、,.\?!][^<]*</key>', text):
+        if re.search(r'<key>[^<]*[，。！？、,\?!][^<]*</key>', text):
             errors.append(f"第 {i+1} 条数据的 <key> 标签内部违规包含了标点符号")
 
     if errors:
